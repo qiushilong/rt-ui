@@ -10,5 +10,9 @@ nav:
 import React from 'react';
 import { Button } from 'rt-ui';
 
-export default () => <Button />;
+export default () => (
+  <>
+    <Button>demo</Button>
+  </>
+);
 ```

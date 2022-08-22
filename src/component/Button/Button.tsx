@@ -1,5 +1,6 @@
 import React, { CSSProperties, ReactNode } from 'react';
 import classNames from 'classnames';
+import { ui_name } from '../_util/constant';
 import './style/button.less';
 
 interface ButtonProps {
@@ -55,7 +56,16 @@ const Button = (props: ButtonProps) => {
   const { type, danger, disabled, loading, search, prefix, className, style, children, ...reset } =
     props;
 
-  const classes = classNames('rt_btn', className);
+  const classes = classNames(
+    `${ui_name}_btn`,
+    `${ui_name}_btn_${type || 'default'}`,
+    {
+      [`${ui_name}_btn_danger`]: danger,
+      [`${ui_name}_btn_disabled`]: disabled,
+      [`${ui_name}_search`]: search,
+    },
+    className,
+  );
 
   return (
     <button className={classes} style={style} {...reset}>

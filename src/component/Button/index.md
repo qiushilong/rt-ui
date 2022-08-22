@@ -12,7 +12,9 @@ import { Button } from 'rt-ui';
 
 export default () => (
   <>
-    <Button>demo</Button>
+    <Button>anniu</Button>
   </>
 );
 ```
+
+<API src="./Button.tsx"></API>

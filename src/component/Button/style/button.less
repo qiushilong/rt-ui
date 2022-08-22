@@ -1,5 +1,13 @@
-@import '../../style/global';
-button {
-  color: red;
+@import '../../_style/global';
+
+@cmp-name: ~'@{ui-name}_btn';
+
+.@{cmp-name} {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 100px;
   outline: none;
 }

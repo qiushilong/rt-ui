@@ -1,6 +1,7 @@
-import React, { CSSProperties, ReactNode } from 'react';
+import React, { CSSProperties, ReactNode, LegacyRef, forwardRef } from 'react';
 import classNames from 'classnames';
 import { ui_name } from '../_util/constant';
+import LoadingIcon from './LoadingIcon';
 import './style/button.less';
 
 interface ButtonProps {
@@ -8,7 +9,7 @@ interface ButtonProps {
    * @description 按钮类型
    * @default 'default'
    */
-  type?: 'primary' | 'default' | 'dashed' | 'text';
+  type?: 'primary' | 'default' | 'dashed';
   /**
    * @description 是否显示危险按钮
    * @default false
@@ -49,12 +50,28 @@ interface ButtonProps {
    * @default
    */
   children?: ReactNode;
+  /**
+   * @description 点击事件
+   * @default
+   */
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   [propsName: string]: any;
 }
 
-const Button = (props: ButtonProps) => {
-  const { type, danger, disabled, loading, search, prefix, className, style, children, ...reset } =
-    props;
+const Button = forwardRef((props: ButtonProps, ref: LegacyRef<HTMLButtonElement>) => {
+  const {
+    type,
+    danger,
+    disabled,
+    loading,
+    search,
+    prefix,
+    className,
+    style,
+    children,
+    onClick,
+    ...reset
+  } = props;
 
   const classes = classNames(
     `${ui_name}_btn`,
@@ -67,10 +84,19 @@ const Button = (props: ButtonProps) => {
     className,
   );
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    if (loading || disabled) {
+      return;
+    }
+    onClick?.(e);
+  };
+
   return (
-    <button className={classes} style={style} {...reset}>
+    <button className={classes} style={style} {...reset} onClick={handleClick} ref={ref}>
+      {loading ? <LoadingIcon /> : prefix}
       {children}
     </button>
   );
-};
+});
 export default Button;

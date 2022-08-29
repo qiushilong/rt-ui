@@ -2,6 +2,9 @@
 nav:
   title: Components
   path: /components
+group:
+  title: 基本组件
+  order: 1
 ---
 
 # Button
@@ -84,7 +87,7 @@ export default () => {
 };
 ```
 
-## disabled
+## ref
 
 ```tsx
 import React, { useRef, useEffect } from 'react';
@@ -100,8 +103,6 @@ export default () => {
   return (
     <>
       <Button ref={ref}>默认按钮</Button>
-      <Button type="primary">primary按钮</Button>
-      <Button type="dashed">dashed按钮</Button>
     </>
   );
 };

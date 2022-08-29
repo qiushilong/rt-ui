@@ -1,10 +1,10 @@
-import React, { CSSProperties, ReactNode, LegacyRef, forwardRef } from 'react';
+import React, { CSSProperties, ReactNode, LegacyRef, forwardRef, FC } from 'react';
 import classNames from 'classnames';
 import { ui_name } from '../_util/constant';
 import LoadingIcon from './LoadingIcon';
 import './style/button.less';
 
-interface ButtonProps {
+export interface ButtonProps {
   /**
    * @description 按钮类型
    * @default 'default'
@@ -58,7 +58,7 @@ interface ButtonProps {
   [propsName: string]: any;
 }
 
-const Button = forwardRef((props: ButtonProps, ref: LegacyRef<HTMLButtonElement>) => {
+const Button: FC<ButtonProps> = forwardRef((props, ref: LegacyRef<HTMLButtonElement>) => {
   const {
     type,
     danger,

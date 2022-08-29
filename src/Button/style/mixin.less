@@ -1,0 +1,26 @@
+.btn_color(@color,@bg-color,@border-color) {
+  color: @color;
+  background-color: @bg-color;
+  border-color: @border-color;
+}
+
+.btn_default {
+  border: 1px solid @white-color;
+  .btn_color(@font-color,@white-color,@gray-color-2);
+  &:hover {
+    .btn_color(@primary-color,@white-color,@primary-color);
+    .@{cmp-name}_loading_icon{
+      border-color: @primary-color;
+      .btn_color(@font-color,@white-color,@primary-color);
+      border-left-color: transparent;
+    }
+  }
+  &.@{cmp-name}_danger {
+    color: @danger-color;
+    border-color: @danger-color;
+    &:hover {
+      color: @danger-color-3;
+      border-color: @danger-color-3;
+    }
+  }
+}

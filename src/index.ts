@@ -1,2 +1,3 @@
 export { default as Foo } from './Foo';
-export { default as Button } from './component/Button';
+export { default as Button } from './Button';
+export { Row as Row, Col as Col } from './Grid';

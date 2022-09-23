@@ -3,33 +3,33 @@
 @cmp-name: ~'@{ui-name}_select';
 
 .@{cmp-name}{
+  position: relative;
   display: inline-block;
-  border:1px solid black;
-  color: red;
-  min-width: 100px;
+  border:1px solid @gray-color-3;
+  // min-width: 100px;
   height: 30px;
   &_content{
     width: 100%;
     height: 100%;
-    input{
-      outline: none;
+    >input{
+      // outline: none;
       border: none;
       height: 100%;
       width: 100%;
       padding: 0 10px;
     }
   }
-  &_down{
+  &_dropdown{
+    position: absolute;
+    top: 105%;
+    left: 0;
+    z-index: @z-index-2;
     display: none;
-    height: 100px;
+    // height: 100px;
     width: 100%;
-    background-color: skyblue;
-    transition: @transition-time;
-    > li{
-      height: 30px;
-      line-height: 30px;
-      padding-left: 20px;
-    }
+    box-shadow: @shadow;
+    background-color: @white-color;
+    transition: all @transition-time;
     &.open{
       display: block;
     }

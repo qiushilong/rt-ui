@@ -1,14 +1,16 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState, useRef } from 'react';
 import classNames from 'classnames';
 import { ui_name } from '../_util/constant';
+import SelectContext from './SelectContext';
 import './style/select.less';
 
+export type ValueType = number | string | undefined;
 export interface SelectProps {
   /**
    * @description 选中值
    * @default
    */
-  value?: number | string;
+  value?: ValueType;
   /**
    * @description 选项
    * @default
@@ -18,7 +20,7 @@ export interface SelectProps {
    * @description 默认值
    * @default
    */
-  defaultValue?: number | string;
+  defaultValue?: ValueType;
   /**
    * @description 允许清除
    * @default false
@@ -39,59 +41,83 @@ export interface SelectProps {
    * @default
    */
   className?: string;
+  children?: ReactNode;
   /**
    * @description 改变事件
    * @default
    */
-  onChange?: Function;
+  onChange?: (value: ValueType) => void;
 }
 
+const cmp_name = `${ui_name}_select`;
+const { Provider } = SelectContext;
+
 const Select: FC<SelectProps> = (props) => {
-  const { value, options, defaultValue, allowClear, disabled, search, className, onChange } = props;
-  const [open, setOpen] = useState<boolean>(false);
-  const [val, setVal] = useState<number | string | undefined>(defaultValue);
+  const {
+    value,
+    options,
+    defaultValue,
+    allowClear,
+    disabled,
+    search,
+    className,
+    children,
+    onChange,
+  } = props;
 
-  const handleFocus = () => {
-    setOpen(true);
+  const [dropDownVisiable, setDropDownVisiable] = useState<boolean>(false);
+  const [selfValue, setSelfValue] = useState<ValueType>(defaultValue);
+  const [selectedLabel, setSelectedLabel] = useState<string>('');
+  const inputRef = useRef(null);
+
+  const handleClick = () => {
+    setDropDownVisiable(!dropDownVisiable);
   };
-  const handleBlur = () => {};
 
-  const handleClick = (key: number | string) => {
-    console.log(key);
-    setVal(options?.find((item) => item.value === key)?.label);
-    setOpen(false);
+  const handleBlur = () => {
+    console.log('handleBlur');
+    // 询问 toggleOption 是否要执行
+    new Promise(() => {}).then(() => {
+      setDropDownVisiable(false);
+    });
+  };
+
+  const toggleOption = (value: ValueType, label: string) => {
+    console.log('sss');
+
+    inputRef.current?.focus();
+    onChange?.(value);
+    setSelfValue(value);
+    setSelectedLabel(label);
+    // setDropDownVisiable(false);
   };
 
   const classes = classNames(
-    `${ui_name}_select`,
+    cmp_name,
     {
-      [`${ui_name}_select_search`]: search,
+      [`${cmp_name}_search`]: search,
     },
     className,
   );
 
-  const downClasses = classNames(`${ui_name}_select_down`, {
-    open: open,
+  const dropdownClasses = classNames(`${cmp_name}_dropdown`, {
+    open: dropDownVisiable,
   });
 
   return (
-    <div className={classes}>
-      <div className={`${ui_name}_select_content`}>
+    <div className={classes} onClick={handleClick}>
+      <div className={`${cmp_name}_content`}>
         <input
           type="text"
           readOnly
-          value={value || val}
-          onFocus={handleFocus}
+          value={selectedLabel || selfValue}
           onBlur={handleBlur}
+          ref={inputRef}
         />
       </div>
-      <ul className={downClasses}>
-        {options?.map((item) => (
-          <li key={item.value} onClick={() => handleClick(item.value)}>
-            {item.label}
-          </li>
-        ))}
-      </ul>
+      <Provider value={{ selectedValue: value, toggleOption: toggleOption }}>
+        <ul className={dropdownClasses}>{children}</ul>
+      </Provider>
     </div>
   );
 };

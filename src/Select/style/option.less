@@ -1,0 +1,16 @@
+@import '../../_style/global';
+
+@cmp-name: ~'@{ui-name}_select_option';
+
+.@{cmp-name}{
+
+  height: 30px;
+  line-height: 30px;
+  padding-left: 20px;
+  cursor: pointer;
+  transition: all @transition-time;
+  &:hover{
+    background-color: @primary-color-2;
+  }
+
+}

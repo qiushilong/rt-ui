@@ -11,6 +11,7 @@ group:
 ```tsx
 import React from 'react';
 import { Select } from 'rt-ui';
+const Option = Select.Option;
 
 const value = 1;
 const options = [
@@ -20,7 +21,13 @@ const options = [
 ];
 
 export default () => {
-  return <Select options={options}></Select>;
+  return (
+    <Select>
+      {options.map((item) => (
+        <Option value={item.value}>{item.label}</Option>
+      ))}
+    </Select>
+  );
 };
 ```
 

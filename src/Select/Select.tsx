@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState, useRef } from 'react';
+import React, { FC, ReactNode, useState, useRef, CSSProperties, ChangeEvent } from 'react';
 import classNames from 'classnames';
 import { ui_name } from '../_util/constant';
 import SelectContext from './SelectContext';
@@ -12,11 +12,6 @@ export interface SelectProps {
    */
   value?: ValueType;
   /**
-   * @description 选项
-   * @default
-   */
-  options?: { label: string; value: number | string }[];
-  /**
    * @description 默认值
    * @default
    */
@@ -27,15 +22,11 @@ export interface SelectProps {
    */
   allowClear?: boolean;
   /**
-   * @description 禁用
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * @description 是否可以搜索
    * @default false
    */
   search?: boolean;
+  style?: CSSProperties;
   /**
    * @description class
    * @default
@@ -53,43 +44,28 @@ const cmp_name = `${ui_name}_select`;
 const { Provider } = SelectContext;
 
 const Select: FC<SelectProps> = (props) => {
-  const {
-    value,
-    options,
-    defaultValue,
-    allowClear,
-    disabled,
-    search,
-    className,
-    children,
-    onChange,
-  } = props;
+  const { value, defaultValue, allowClear, search, style, className, children, onChange } = props;
 
-  const [dropDownVisiable, setDropDownVisiable] = useState<boolean>(false);
+  const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [selfValue, setSelfValue] = useState<ValueType>(defaultValue);
-  const [selectedLabel, setSelectedLabel] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<ValueType>('');
   const inputRef = useRef(null);
 
   const handleClick = () => {
-    setDropDownVisiable(!dropDownVisiable);
+    setDropDownVisible(!dropDownVisible);
   };
 
-  const handleBlur = () => {
-    console.log('handleBlur');
-    // 询问 toggleOption 是否要执行
-    new Promise(() => {}).then(() => {
-      setDropDownVisiable(false);
-    });
+  const handleBlur = () => {};
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
   };
 
-  const toggleOption = (value: ValueType, label: string) => {
-    console.log('sss');
-
-    inputRef.current?.focus();
+  const toggleOption = (value: ValueType) => {
     onChange?.(value);
     setSelfValue(value);
-    setSelectedLabel(label);
-    // setDropDownVisiable(false);
+    setSearchValue(undefined);
+    setDropDownVisible(true);
   };
 
   const classes = classNames(
@@ -101,21 +77,30 @@ const Select: FC<SelectProps> = (props) => {
   );
 
   const dropdownClasses = classNames(`${cmp_name}_dropdown`, {
-    open: dropDownVisiable,
+    open: dropDownVisible,
   });
 
+  const finalValue = value || (searchValue ?? selfValue); // 优先级：props.value > search.value(可以等于空串) > self.value
+
   return (
-    <div className={classes} onClick={handleClick}>
+    <div className={classes} style={style} onClick={handleClick} onBlur={handleBlur}>
       <div className={`${cmp_name}_content`}>
         <input
           type="text"
-          readOnly
-          value={selectedLabel || selfValue}
+          readOnly={!search}
+          value={finalValue}
           onBlur={handleBlur}
+          onChange={handleChange}
           ref={inputRef}
         />
       </div>
-      <Provider value={{ selectedValue: value, toggleOption: toggleOption }}>
+      <Provider
+        value={{
+          selectedValue: finalValue,
+          searchValue: searchValue,
+          toggleOption: toggleOption,
+        }}
+      >
         <ul className={dropdownClasses}>{children}</ul>
       </Provider>
     </div>

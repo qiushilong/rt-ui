@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 import type { Context } from 'react';
+import type { ValueType } from './index';
 
 interface SelectContextState {
-  selectedValue?: string | number;
-  toggleOption?: (value: string | number | undefined, label: string) => void;
+  selectedValue?: ValueType;
+  searchValue?: ValueType;
+  toggleOption?: (value: ValueType, label: string) => void;
 }
 
 const context: Context<SelectContextState> = createContext({});

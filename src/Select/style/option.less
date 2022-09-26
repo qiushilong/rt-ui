@@ -6,11 +6,24 @@
 
   height: 30px;
   line-height: 30px;
-  padding-left: 20px;
+  padding:0 20px;
   cursor: pointer;
   transition: all @transition-time;
+  overflow: hidden;
+  text-overflow: ellipsis;
   &:hover{
     background-color: @primary-color-2;
   }
 
+  &.@{cmp-name}_checked{
+      background-color: @primary-color;
+  }
+
+  &.@{cmp-name}_disabled{
+    cursor: not-allowed;
+    color:@gray-color-4;
+    &:hover{
+      background-color: @white-color;
+    }
+  }
 }

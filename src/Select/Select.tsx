@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useState, useRef, CSSProperties, ChangeEvent } from 'react';
 import classNames from 'classnames';
+import SvgIcon from '../SvgIcon';
 import { ui_name } from '../_util/constant';
 import SelectContext from './SelectContext';
 import './style/select.less';
@@ -48,8 +49,9 @@ const Select: FC<SelectProps> = (props) => {
 
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [selfValue, setSelfValue] = useState<ValueType>(defaultValue);
-  const [searchValue, setSearchValue] = useState<ValueType>('');
+  const [searchValue, setSearchValue] = useState<ValueType>(undefined);
   const inputRef = useRef(null);
+  const [iconName, setIconName] = useState('#icon-down-arrow');
 
   const handleClick = () => {
     setDropDownVisible(!dropDownVisible);
@@ -80,12 +82,19 @@ const Select: FC<SelectProps> = (props) => {
     open: dropDownVisible,
   });
 
-  const finalValue = value || (searchValue ?? selfValue); // 优先级：props.value > search.value(可以等于空串) > self.value
+  const finalValue = value ?? searchValue ?? selfValue; // 优先级：props.value > search.value > self.value (都可以为空串)
 
   return (
-    <div className={classes} style={style} onClick={handleClick} onBlur={handleBlur}>
+    <div
+      className={classes}
+      style={style}
+      onClick={handleClick}
+      onBlur={handleBlur}
+      onMouseEnter={() => {}}
+    >
       <div className={`${cmp_name}_content`}>
         <input
+          className={`${cmp_name}_content_input`}
           type="text"
           readOnly={!search}
           value={finalValue}
@@ -93,6 +102,7 @@ const Select: FC<SelectProps> = (props) => {
           onChange={handleChange}
           ref={inputRef}
         />
+        <SvgIcon icon={iconName} className={`${cmp_name}_content_suffix`} />
       </div>
       <Provider
         value={{
